@@ -1,45 +1,43 @@
-import React from "react";
-import { StyleSheet, Text, SafeAreaView, StatusBar, Alert, View, TouchableHighlight } from "react-native";
+import React, { useState } from "react";
+import { View, TouchableOpacity, Text, StyleSheet, Alert } from "react-native";
 
 export default function App() {
-  const handleTextPress = () =>
-    Alert.alert("Wow you are so cool, thanks for pressing this text to see magic!");
+  const [count, setCount] = useState(0);
+
+  const plusOneButton = () => {
+    setCount(count + 1);
+  };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.centeredContainer}>
-        <TouchableHighlight
-          underlayColor="#FF8112" // Change background colour when press
-          onPress={handleTextPress}
-        >
-          <View style={styles.button}>
-            <Text numberOfLines={1} style={styles.text}>
-              Hey you can press this amazing and interesting text!
-            </Text>
-          </View>
-        </TouchableHighlight>
-      </View>
-      <StatusBar style="auto" />
-    </SafeAreaView>
+    <View style={styles.container}>
+      <TouchableOpacity onPress={plusOneButton} style={styles.button}>
+        <Text style={styles.buttonText}>Press me :D</Text>
+      </TouchableOpacity>
+      <Text style={styles.countText}> {count} cats are happy ^^</Text>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#000C44",
-  },
-  centeredContainer: {
-    flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    paddingHorizontal: 16,
   },
-  text: {
-    color: "#FFCF12",
-    fontSize: 14,
-    textAlign: "center",
-    flexWrap: 'wrap',
-    padding: 10,
+  button: {
+    backgroundColor: "#CAF6CC",
+    paddingVertical: 10,
+    paddingHorizontal: 40,
+    borderRadius: 50,
+    borderColor: '165A19',
+    borderWidth: 2,
+  },
+  buttonText: {
+    color: "#000",
+    fontSize: 18,
+  },
+  countText: {
+    margin: 20,
+    fontSize: 20,
   },
 });
