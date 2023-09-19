@@ -3,17 +3,28 @@ import { View, TouchableOpacity, Text, StyleSheet, Alert } from "react-native";
 
 export default function App() {
   const [count, setCount] = useState(0);
+  const [backgroundColor, setBackgroundColor] = useState(getRandomColor());
 
   const plusOneButton = () => {
     setCount(count + 1);
+    setBackgroundColor(getRandomColor());
   };
 
   const resetPress = () => {
     setCount(0);
   };
 
+  function getRandomColor() {
+    const letters = "0123456789ABCDEF";
+    let color = "#";
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  }
+
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor }]}>
       <TouchableOpacity onPress={plusOneButton} style={styles.button}>
         <Text style={styles.buttonText}>Press me :D</Text>
       </TouchableOpacity>
