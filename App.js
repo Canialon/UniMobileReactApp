@@ -8,12 +8,19 @@ export default function App() {
     setCount(count + 1);
   };
 
+  const resetPress = () => {
+    setCount(0);
+  };
+
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={plusOneButton} style={styles.button}>
         <Text style={styles.buttonText}>Press me :D</Text>
       </TouchableOpacity>
       <Text style={styles.countText}> {count} cats are happy ^^</Text>
+      <TouchableOpacity onPress={resetPress} style={styles.resetButton}>
+        <Text style={styles.buttonText}>Reset</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -31,6 +38,14 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     borderColor: '165A19',
     borderWidth: 2,
+  },
+  resetButton: {
+    backgroundColor: "#FEBEBE",
+    borderColor: 'EA7B7B',
+    borderWidth: 2,
+    paddingVertical: 10,
+    paddingHorizontal: 30,
+    borderRadius: 50,
   },
   buttonText: {
     color: "#000",
