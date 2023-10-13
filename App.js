@@ -68,7 +68,16 @@ const App = () => {
       <View style={styles.table}>
         <View style={styles.row}>
           <View style={styles.cell} />
-          <View style={styles.cell} />
+          <View style={styles.cell} >
+                <View
+                  style={{
+                    ...styles.colorBlock,
+                    backgroundColor,
+                    width,
+                    height,
+                  }}
+                />
+          </View>
           <View style={styles.cell} />
         </View>
         <View style={styles.row}>
