@@ -1,114 +1,129 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, FlatList, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TextInput, Button } from 'react-native';
 
-export default function App() {
-  const [tasks, setTasks] = useState([]);
-  const [newTask, setNewTask] = useState('');
+const App = () => {
+  const [red, setRed] = useState(0);
+  const [green, setGreen] = useState(0);
+  const [blue, setBlue] = useState(0);
+  const [width, setWidth] = useState(100);
+  const [height, setHeight] = useState(100);
 
-  const addTask = () => {
-    if (newTask.trim() === '') return;
-    setTasks([...tasks, { text: newTask, completed: false }]);
-    setNewTask('');
+  const changeColor = () => {
+    const validRed = Math.min(255, Math.max(0, red));
+    const validGreen = Math.min(255, Math.max(0, green));
+    const validBlue = Math.min(255, Math.max(0, blue));
+
+    const newColor = `rgb(${validRed}, ${validGreen}, ${validBlue})`;
+    setBackgroundColor(newColor);
   };
 
-  const completeTask = (index) => {
-    const updatedTasks = [...tasks];
-    updatedTasks[index].completed = true;
-    setTasks(updatedTasks);
+  const increaseSize = () => {
+    setWidth(width + 10);
+    setHeight(height + 10);
   };
 
-  const removeTask = (index) => {
-    const updatedTasks = [...tasks];
-    updatedTasks.splice(index, 1);
-    setTasks(updatedTasks);
+  const decreaseSize = () => {
+    if (width > 10 && height > 10) {
+      setWidth(width - 10);
+      setHeight(height - 10);
+    }
   };
+
+  const [backgroundColor, setBackgroundColor] = useState('black');
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>To-do list</Text>
-      <View style={styles.taskInputContainer}>
-        <TextInput
-          style={styles.taskInput}
-          placeholder="Add new task"
-          value={newTask}
-          onChangeText={(text) => setNewTask(text)}
-        />
-        <Button title="+" onPress={addTask} />
-      </View>
-      <FlatList
-        data={tasks}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={({ item, index }) => (
-          <View style={styles.taskItem}>
-            <Text
-              style={item.completed ? styles.completedTask : styles.taskText}
-            >
-              {item.text}
-            </Text>
-            {!item.completed && (
-              <>
-                <Button
-                  title="Done"
-                  onPress={() => completeTask(index)}
-                />
-                <Button title="X" onPress={() => removeTask(index)} />
-              </>
-            )}
-          </View>
-        )}
+      <TextInput
+        style={styles.input}
+        placeholder="R (0-255)"
+        keyboardType="numeric"
+        onChangeText={(text) => setRed(parseInt(text))}
       />
+      <TextInput
+        style={styles.input}
+        placeholder="G (0-255)"
+        keyboardType="numeric"
+        onChangeText={(text) => setGreen(parseInt(text))}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="B (0-255)"
+        keyboardType="numeric"
+        onChangeText={(text) => setBlue(parseInt(text))}
+      />
+      <Button title="Change Color" onPress={changeColor} style={styles.button} />
+      <View
+        style={{
+          ...styles.colorBlock,
+          backgroundColor,
+          width,
+          height,
+        }}
+      />
+      <View style={styles.buttonContainer}>
+        <Button title="Bigger" onPress={increaseSize} style={styles.button} />
+        <Button title="Smaller" onPress={decreaseSize} style={styles.button} />
+      </View>
+
+      <View style={styles.table}>
+        <View style={styles.row}>
+          <View style={styles.cell} />
+          <View style={styles.cell} />
+          <View style={styles.cell} />
+        </View>
+        <View style={styles.row}>
+          <View style={styles.cell} />
+          <View style={styles.cell} />
+          <View style={styles.cell} />
+        </View>
+        <View style={styles.row}>
+          <View style={styles.cell} >
+        <Button title="Bigger" onPress={increaseSize} style={styles.button} /></View>
+          <View style={styles.cell} />
+          <View style={styles.cell} >
+        <Button title="Smaller" onPress={decreaseSize} style={styles.button} /></View>
+        </View>
+      </View>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    backgroundColor: '#000000',
-  },
-  header: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    color: '#fff'
-  },
-  taskInputContainer: {
-    flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 20,
+    justifyContent: 'center',
   },
-  taskInput: {
-    flex: 1,
-    marginRight: 10,
+  input: {
     borderWidth: 1,
-    borderColor: '#ccc',
-    padding: 10,
-    paddingHorizontal: 20,
-    color: '#fff',
-    borderRadius: 50,
+    borderColor: 'gray',
+    width: 100,
+    padding: 5,
+    marginBottom: 10,
   },
-  taskItem: {
+  colorBlock: {
+    width: 100,
+    height: 100,
+    marginVertical: 20,
+  },
+  buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    width: 150,
+  },
+  table: {
+    flexDirection: 'column',
+    margin: 30,
+  },
+  row: {
+    flexDirection: 'row',
+  },
+  cell: {
+    width: 50,
+    height: 50,
     borderWidth: 1,
-    borderColor: '#ccc',
-    padding: 10,
-    marginBottom: 10,
-    borderRadius: 50,
-    paddingHorizontal: 20,
-  },
-  taskText: {
-    flex: 1,
-    fontSize: 18,
-    color: '#fff'
-  },
-  completedTask: {
-    flex: 1,
-    fontSize: 18,
-    textDecorationLine: 'line-through',
-    color: 'green',
-    color: '#fff'
+    borderColor: 'black',
   },
 });
+
+export default App;
