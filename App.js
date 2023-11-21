@@ -1,86 +1,83 @@
 import React, { useState } from "react";
-import { StyleSheet, AppRegistry, Text } from "react-native";
-import LoginForm from "./components/LoginForm/LoginForm";
+import { StyleSheet, AppRegistry } from "react-native";
 import {
   NativeBaseProvider,
   View,
   extendTheme,
-  Center,
+  Input,
   Button,
-  PresenceTransition,
+  Text,
+  IconButton,
 } from "native-base";
+import { MaterialIcons } from "@expo/vector-icons";
 
 const newColorTheme = {};
 const theme = extendTheme({ colors: newColorTheme });
 
 export default function App() {
-  const [password, setPassword] = useState("password");
-  const [login, setLogin] = useState("login");
+  const [password, setPassword] = useState("");
+  const [login, setLogin] = useState("");
   const [isCorrect, setIsCorrect] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
+
   const handleLogin = () => {
-    users.some((val) => val.password == password && val.login == login)
-      ? setIsCorrect(true)
-      : setIsCorrect(false);
+    const isValidUser = users.some(
+      (val) => val.password === password && val.login === login
+    );
+    setIsCorrect(isValidUser);
   };
+
   const users = [
     {
-      login: "yaroslav@gmail.com",
-      password: "12345",
+      login: "tonia@gmail.com",
+      password: "ilovecats",
     },
   ];
+
   return (
     <NativeBaseProvider>
-      <PresenceTransition
-        visible={isCorrect != null}
-        initial={{
-          translateY: -100,
-          opacity: 0,
-        }}
-        animate={{
-          translateY: 0,
-          opacity: 1,
-          transition: {
-            duration: 250,
-          },
-        }}
-      >
-        <Center
-          bg={!isCorrect ? "red.500" : "green.500"}
-          rounded="md"
-          w="100%"
-          h="75"
-          _text={{
-            color: "white",
-          }}
-          textAlign={"center"}
-        >
-          {!isCorrect
-            ? "Invalid password or email, try again"
-            : "You are authorized"}
-        </Center>
-      </PresenceTransition>
       <View style={styles.container}>
-        <View style={styles.inputsContainer}>
-          <LoginForm
-            inpData={login}
-            setInpData={setLogin}
-            type={"text"}
-            label="Login"
-            isCorrect={isCorrect}
-          />
-          <LoginForm
-            inpData={password}
-            setInpData={setPassword}
-            type={"password"}
-            label="Password"
-            isCorrect={isCorrect}
-          />
-        </View>
-        <Center style={styles.button}>
-          <Button onPress={() => handleLogin()} width={"100%"}>
-            Login
-          </Button>
-        </Center>
+        <Input
+          variant="filled"
+          placeholder="Login"
+          mt={4}
+          value={login}
+          onChangeText={(text) => setLogin(text)}
+          defaultValue=""
+          fontSize="lg"
+        />
+        <Input
+          variant="filled"
+          placeholder="Password"
+          mt={4}
+          value={password}
+          onChangeText={(text) => setPassword(text)}
+          secureTextEntry={!showPassword}
+          defaultValue=""
+          fontSize="lg"
+          InputRightElement={
+            <IconButton
+              variant="unstyled"
+              icon={<MaterialIcons name={showPassword ? "visibility-off" : "visibility"} size={24} />}
+              onPress={() => setShowPassword(!showPassword)}
+            />
+          }
+        />
+        <Button onPress={() => handleLogin()} mt={8} size="lg">
+          Login
+        </Button>
+        {isCorrect !== null && (
+          <Text
+            mt={4}
+            color={isCorrect ? "green.500" : "red.500"}
+            textAlign="center"
+            fontSize="lg"
+          >
+            {isCorrect
+              ? "You are authorized"
+              : "Invalid password or email, try again"}
+          </Text>
+        )}
       </View>
     </NativeBaseProvider>
   );
@@ -90,11 +87,8 @@ AppRegistry.registerComponent("MyApp", () => App);
 
 const styles = StyleSheet.create({
   container: {
-    margin: "auto",
-    marginTop: 100,
-    position: "relative",
-  },
-  inputsContainer: {
-    height: 300,
+    flex: 1,
+    justifyContent: "center",
+    padding: 16,
   },
 });
