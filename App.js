@@ -1,138 +1,100 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, Button } from 'react-native';
+import React, { useState } from "react";
+import { StyleSheet, AppRegistry, Text } from "react-native";
+import LoginForm from "./components/LoginForm/LoginForm";
+import {
+  NativeBaseProvider,
+  View,
+  extendTheme,
+  Center,
+  Button,
+  PresenceTransition,
+} from "native-base";
 
-const App = () => {
-  const [red, setRed] = useState(0);
-  const [green, setGreen] = useState(0);
-  const [blue, setBlue] = useState(0);
-  const [width, setWidth] = useState(100);
-  const [height, setHeight] = useState(100);
+const newColorTheme = {};
+const theme = extendTheme({ colors: newColorTheme });
 
-  const changeColor = () => {
-    const validRed = Math.min(255, Math.max(0, red));
-    const validGreen = Math.min(255, Math.max(0, green));
-    const validBlue = Math.min(255, Math.max(0, blue));
-
-    const newColor = `rgb(${validRed}, ${validGreen}, ${validBlue})`;
-    setBackgroundColor(newColor);
+export default function App() {
+  const [password, setPassword] = useState("password");
+  const [login, setLogin] = useState("login");
+  const [isCorrect, setIsCorrect] = useState(null);
+  const handleLogin = () => {
+    users.some((val) => val.password == password && val.login == login)
+      ? setIsCorrect(true)
+      : setIsCorrect(false);
   };
-
-  const increaseSize = () => {
-    setWidth(width + 10);
-    setHeight(height + 10);
-  };
-
-  const decreaseSize = () => {
-    if (width > 10 && height > 10) {
-      setWidth(width - 10);
-      setHeight(height - 10);
-    }
-  };
-
-  const [backgroundColor, setBackgroundColor] = useState('black');
-
+  const users = [
+    {
+      login: "yaroslav@gmail.com",
+      password: "12345",
+    },
+  ];
   return (
-    <View style={styles.container}>
-      <TextInput
-        style={styles.input}
-        placeholder="R (0-255)"
-        keyboardType="numeric"
-        onChangeText={(text) => setRed(parseInt(text))}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="G (0-255)"
-        keyboardType="numeric"
-        onChangeText={(text) => setGreen(parseInt(text))}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="B (0-255)"
-        keyboardType="numeric"
-        onChangeText={(text) => setBlue(parseInt(text))}
-      />
-      <Button title="Change Color" onPress={changeColor} style={styles.button} />
-      <View
-        style={{
-          ...styles.colorBlock,
-          backgroundColor,
-          width,
-          height,
+    <NativeBaseProvider>
+      <PresenceTransition
+        visible={isCorrect != null}
+        initial={{
+          translateY: -100,
+          opacity: 0,
         }}
-      />
-      <View style={styles.buttonContainer}>
-        <Button title="Bigger" onPress={increaseSize} style={styles.button} />
-        <Button title="Smaller" onPress={decreaseSize} style={styles.button} />
+        animate={{
+          translateY: 0,
+          opacity: 1,
+          transition: {
+            duration: 250,
+          },
+        }}
+      >
+        <Center
+          bg={!isCorrect ? "red.500" : "green.500"}
+          rounded="md"
+          w="100%"
+          h="75"
+          _text={{
+            color: "white",
+          }}
+          textAlign={"center"}
+        >
+          {!isCorrect
+            ? "Invalid password or email, try again"
+            : "You are authorized"}
+        </Center>
+      </PresenceTransition>
+      <View style={styles.container}>
+        <View style={styles.inputsContainer}>
+          <LoginForm
+            inpData={login}
+            setInpData={setLogin}
+            type={"text"}
+            label="Login"
+            isCorrect={isCorrect}
+          />
+          <LoginForm
+            inpData={password}
+            setInpData={setPassword}
+            type={"password"}
+            label="Password"
+            isCorrect={isCorrect}
+          />
+        </View>
+        <Center style={styles.button}>
+          <Button onPress={() => handleLogin()} width={"100%"}>
+            Login
+          </Button>
+        </Center>
       </View>
-
-      <View style={styles.table}>
-        <View style={styles.row}>
-          <View style={styles.cell} />
-          <View style={styles.cell} >
-                <View
-                  style={{
-                    ...styles.colorBlock,
-                    backgroundColor,
-                    width,
-                    height,
-                  }}
-                />
-          </View>
-          <View style={styles.cell} />
-        </View>
-        <View style={styles.row}>
-          <View style={styles.cell} />
-          <View style={styles.cell} />
-          <View style={styles.cell} />
-        </View>
-        <View style={styles.row}>
-          <View style={styles.cell} >
-        <Button title="Bigger" onPress={increaseSize} style={styles.button} /></View>
-          <View style={styles.cell} />
-          <View style={styles.cell} >
-        <Button title="Smaller" onPress={decreaseSize} style={styles.button} /></View>
-        </View>
-      </View>
-    </View>
+    </NativeBaseProvider>
   );
-};
+}
+
+AppRegistry.registerComponent("MyApp", () => App);
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    margin: "auto",
+    marginTop: 100,
+    position: "relative",
   },
-  input: {
-    borderWidth: 1,
-    borderColor: 'gray',
-    width: 100,
-    padding: 5,
-    marginBottom: 10,
-  },
-  colorBlock: {
-    width: 100,
-    height: 100,
-    marginVertical: 20,
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: 150,
-  },
-  table: {
-    flexDirection: 'column',
-    margin: 30,
-  },
-  row: {
-    flexDirection: 'row',
-  },
-  cell: {
-    width: 50,
-    height: 50,
-    borderWidth: 1,
-    borderColor: 'black',
+  inputsContainer: {
+    height: 300,
   },
 });
-
-export default App;
